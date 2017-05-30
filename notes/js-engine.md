@@ -27,3 +27,16 @@ Command Prompt: Windows
     * Node is written in C++
     * V8 is written in C++
       * V8 is the engine that converts Javascript into machine language
+
+## ECMAScript
+The Standard JavaScript is based on. We needed a standard because there are many engines out there.
+
+## JavaScript Engine
+A program that converts the JavaScript code into something that the computer processor can understand. It should follow the ECMAScript standard on how the language should work and what features it should have.
+
+## V8 Under the Hood
+Open-sourced engine built by Google. Highly performant. Really interesting high-level overview:
+https://www.google.com/googlebooks/chrome/small_12.html
+
+Key feature of V8: adding features to JavaScript
+V8 can run standalone or embedded into any C++ application.
