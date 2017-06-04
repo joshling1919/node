@@ -60,3 +60,52 @@ The above is different from a named function (ie. `function greetMe {}`).
 Personal aside: This is part of the reason I like JS so much. When you
 have control over the execution of functions by having first-class
 functions, it gives you so much more flexibility with functions.
+
+## Objects
+When a function is attached to an object, we call that a method.
+
+Object literal: name/value pairs separated by commas and  surrounded by curly
+braces.
+
+## Prototypal Inheritance and Function Constructors
+Inheritance: one object gets access to the properties and methods of another 
+object.
+
+![prototype chain](./images/prototype-chain.png)
+
+2 objects can share the same prototype chain.
+
+Function constructors: a normal function that is used to construct objects.
+
+The 'this' variable points to a new empty object, and that object is returned
+from the function automatically.
+
+```js
+function Person(firstname, lastname) {
+  // when I used the new key word, the 'this' keyword will point to a new
+  // object that I can attach these attributes to.
+  this.firstname = firstname;
+  this.lastname = lastname;
+}
+
+// Here I have a greet function on the prototype. What happens when you use a 
+// function constructor is that any object created from the function constructor,
+// its prototype will point to the prototype property of the function you used
+// to create the object.
+Person.prototype.greet = function() {
+  console.log('Hello, ' + this.firstname + ' ' + this.lastname); 
+}
+
+var john = new Person('John', 'Doe');
+var jane = new Person('Jane', 'Doe');
+
+john.__proto__ == jane.__proto__ 
+// true
+```
+Functions are special types of objects, so I can have properties and methods 
+on functions as well. And there's a built in one called prototype that's 
+just an object, but I can attach properties and methods to this prototype object.
+
+There's a special `__proto__` method that lets me see what the actual 
+prototype object is of an object that I'm working with.
+
