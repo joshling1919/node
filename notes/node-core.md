@@ -109,3 +109,40 @@ just an object, but I can attach properties and methods to this prototype object
 There's a special `__proto__` method that lets me see what the actual 
 prototype object is of an object that I'm working with.
 
+## By Reference and By Value
+Primitive: type of data that represents a single value; not an object.
+
+Here, if we have a variable a, and we pass it into a function that accepts a 
+variable b, it's pass by value:
+![pass by value](images/pass-by-value.png)
+
+```js
+function change(b) {
+  b = 2;
+}
+
+var a = 1;
+change(a);
+console.log(a);
+// a is still 1;
+// The above is pass by value because a copy of the primitive value gets 
+// passed into the function.
+```
+
+Objects, unlike primitives, are passed by reference:
+![pass by reference](images/pass-by-reference.png)
+
+```js
+function changeObj(d) {
+  d.prop1 = function() {};
+  d.prop2 = {};
+}
+
+var c = {};
+c.prop1 = {};
+console.log(c);
+// c is now { prop1: function() {}, prop2: {}};
+```
+Node.js takes advantage of how objects are passed by reference in regards to
+how require and module.exports works.
+
