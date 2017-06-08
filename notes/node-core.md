@@ -146,3 +146,35 @@ console.log(c);
 Node.js takes advantage of how objects are passed by reference in regards to
 how require and module.exports works.
 
+## Immediately Invoked Function Expressions(IFFE)
+```js
+var firstname = 'Jane';
+(function() {
+  var firstname = 'John';
+  console.log(firstname);
+}))();
+
+console.log(firstname);
+// John
+// Jane
+```
+Whatever variable you create within a function is only accessible (scoped) 
+within the function. It's how JS developers have been mocking a module.
+
+You can also pass arguments to an IFFE.
+```js
+var firstname = 'Jane';
+(function(lastname) {
+  var firstname = 'John';
+  console.log(firstname);
+  console.log(lastname);
+}))('Doe');
+
+console.log(firstname);
+// John
+// Doe
+// Jane
+```
+
+## How do Node Modules Really Work? module.exports and require
+
