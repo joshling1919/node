@@ -177,4 +177,79 @@ console.log(firstname);
 ```
 
 ## How do Node Modules Really Work? module.exports and require
+The require function is actually just returning what comes back from the real
+require function, which is sitting on the prototype attached to the function
+constructor Module. In other words, every module you create gets an object
+created to represent it, and that gets access to a `require` method using 
+prototypal inheritance:
+
+```js
+Module.prototype.require = function(path) {
+  assert(path, 'missing path');
+  assert(typeof path === 'string', 'path must be a string');
+  return Module._load(path, this, /* isMain */ false);
+};
+```
+
+The `require` function above is actually just a wrapper for the load function.
+
+Node takes code JS content and wraps it before passing it to the V8 engine:
+
+```js
+  // script is my code
+  NativeModule.wrap = function(script) {
+    return NativeModule.wrapper[0] + script +
+    NativeModule.wrapper[1];
+  };
+
+  NativeModule.wrapper = [
+    'function(exports, require, module, __filename,
+    __dirname) { '
+    '\n});'
+  ];
+
+```
+The code that I've written is wrapped in a function expression. Everything I 
+write in Node is actually wrapped inside of the above function expression before 
+passed to the V8 engine. It looks like this:
+
+```js
+(function (exports, require, module, __filename, __dirname) {
+  // my code
+  var greet = function() {
+    console.log('Hello!');
+  };
+
+  module.exports = greet;
+});
+```
+
+Looking at the code above, we can now see why `require` and `module.exports`
+is available to us when we're writing code in Node. It's because Node actually
+wraps our code in that wrapper function before invoking that wrapper function
+with the appropriate parameters:
+
+```js
+var parameters = [module.exports, require, module, filename, dirname];
+
+fn.apply(module.exports, parameters);
+```
+
+Also, what's actually returned by the `require` function is `module.exports`.
+Remember, objects are passed by reference, so whatever I do to module.exports
+inside my module will impact the module.exports, like so:
+
+```js
+  module.exports = greet;
+```
+
+Also, because my code is wrapped inside a function, everything becomes scoped
+within that function, and it's protected from my variables being changed by
+anything that happens outside of that function scope.
+
+Summary:
+* `require` is a function that you pass a 'path' to
+* `module.exports` is what the require function returns
+* this works because your code is actually wrapped in a function that is given 
+these things as function parameters
 
